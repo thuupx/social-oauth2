@@ -1,5 +1,5 @@
 {
-  "name": "tsconfig",
+  "name": "@social-oauth2/tsconfig",
   "version": "0.0.0",
   "private": true,
   "license": "MIT",

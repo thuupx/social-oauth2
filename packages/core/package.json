@@ -1,5 +1,5 @@
 {
-  "name": "@social-oauth2/ui",
+  "name": "@social-oauth2/core",
   "version": "0.0.0",
   "main": "./index.tsx",
   "types": "./index.tsx",
@@ -11,11 +11,11 @@
     "react": "^18.2.0"
   },
   "devDependencies": {
+    "@types/google.accounts": "^0.0.7",
     "@types/react": "^18.2.6",
     "@types/react-dom": "^18.2.4",
     "eslint": "^8.40.0",
     "@social-oauth2/eslint-config-custom": "workspace:*",
-    "@social-oauth2/core": "workspace:*",
     "@social-oauth2/tsconfig": "workspace:*",
     "typescript": "^5.0.4"
   }

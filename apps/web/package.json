@@ -12,14 +12,15 @@
     "next": "^13.4.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "ui": "workspace:*"
+    "@social-oauth2/ui": "workspace:*"
   },
   "devDependencies": {
-    "@types/node": "^17.0.12",
-    "@types/react": "^18.0.22",
-    "@types/react-dom": "^18.0.7",
-    "eslint-config-custom": "workspace:*",
-    "tsconfig": "workspace:*",
-    "typescript": "^4.5.3"
+    "@types/node": "^20.1.1",
+    "@types/react": "^18.2.6",
+    "@types/react-dom": "^18.2.4",
+    "@social-oauth2/eslint-config-custom": "workspace:*",
+    "@social-oauth2/tsconfig": "workspace:*",
+    "@social-oauth2/core": "workspace:*",
+    "typescript": "^5.0.4"
   }
 }

@@ -1,81 +1,140 @@
-# Turborepo starter
+# OAuth2 authorization with extendable, customizable social providers for modern web applications
 
-This is an official starter Turborepo.
+## How to use?
 
-## Using this example
+### ReactJS/NextJS
 
-Run the following command:
+Prebuilt social login buttons are available in `@social-oauth2/react` package
 
-```sh
-npx create-turbo@latest
-```
+Usage:
 
-## What's inside?
+```tsx
+import { ResolvedResult } from '@social-oauth2/core';
+import { GoogleLoginButton } from '@social-oauth2/ui';
 
-This Turborepo includes the following packages/apps:
+export function LoginComponent() {
+  const handleResolved = (result: ResolvedResult) => {
+    const { data, user } = result;
+    console.log('Data: ', data);
+    console.log('User: ', user);
+  };
 
-### Apps and Packages
+  const handleRejected = (error: Error) => {
+    console.error('Error: ', error);
+  };
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `ui`: a stub React component library shared by both `web` and `docs` applications
-- `eslint-config-custom`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `tsconfig`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
+  return (
+    <GoogleLoginButton
+      clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}
+      scope="email profile"
+      onResolved={handleResolved}
+      onRejected={handleRejected}
+      btnProps={{ width: '50px', height: '100px' }}
+    />
+  );
+}
 
 ```
-cd my-turborepo
-pnpm build
+
+### Other Framework/Vanilla JS application/Custom Authorization server/service
+
+Coming in the future, very welcome to contribute to the project
+
+## How to add new your own provider?
+
+- Write a class that extends `SocialProviderFactory` abstract class and
+  implements `SocialProvider`
+- Adding your own logic for your provider
+
+Example:
+
+```tsx
+import {
+  ProviderType,
+  SocialProvider,
+  SocialProviderFactory,
+} from '@social-oauth2/core';
+
+// TODO: Handle your own custom providers
+export class CustomProviderFactory
+  extends SocialProviderFactory
+  implements SocialProvider
+{
+  name: ProviderType;
+  sdkSrc: string;
+  profileUrl: string;
+
+  constructor() {
+    super();
+    // Need to bind these functions to corresponding caller
+    // in this case, `this` is `CustomProviderFactory`
+    this.onScriptLoaded = this.onScriptLoaded.bind(this);
+    this.getAccessToken = this.getAccessToken.bind(this);
+    this.onSuccess = this.onSuccess.bind(this);
+    this.onError = this.onError.bind(this);
+  }
+
+  onScriptLoaded(event: Event): void {
+    // Handle after loading the provider SDK script.
+  }
+  public factoryProvider(): SocialProvider {
+    return this;
+  }
+  public getAccessToken(): void {
+    // Handle get access token based on your auth server/service
+  }
+}
+
 ```
 
-### Develop
+Then, register above provider to the registry factory by calling `registry` from `@social-oauth2/core` package.
 
-To develop all apps and packages, run the following command:
+```ts
+import { registry } from '@social-oauth2/core';
+import { CustomProviderFactory } from 'path/to/CustomProviderFactory';
 
-```
-cd my-turborepo
-pnpm dev
-```
-
-### Remote Caching
-
-Turborepo can use a technique known as [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup), then enter the following commands:
+registry.registerFactory(
+  ProviderType.CustomProvider,
+  CustomProviderFactory.getInstance(),
+);
 
 ```
-cd my-turborepo
-npx turbo login
+
+Write your components
+
+```tsx
+import {
+  ProviderType,
+  SocialLoginButtonProps,
+  registry,
+} from '@social-oauth2/core';
+
+const factory = registry.getFactory(ProviderType.CustomProvider);
+
+export function CustomLoginButton({
+  buttonProps = {},
+  ...restProps
+}: SocialLoginButtonProps) {
+  const onResolved = restProps.onResolved;
+  const onRejected = restProps.onRejected;
+
+  factory.factoryProvider().initialize(
+    {
+      client_id: restProps.clientId,
+      scope: restProps.scope,
+      ...other_sdk_config
+    },
+    { onResolved, onRejected },
+  );
+
+  return (
+    <button {...buttonProps} onClick={factory.getAccessToken}>
+      {buttonProps.children ? <>{buttonProps.children}</> : 'Login with Custom Provider'}
+    </button>
+  );
+}
 ```
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+### Demo
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-```
-npx turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks)
-- [Caching](https://turbo.build/repo/docs/core-concepts/caching)
-- [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching)
-- [Filtering](https://turbo.build/repo/docs/core-concepts/monorepos/filtering)
-- [Configuration Options](https://turbo.build/repo/docs/reference/configuration)
-- [CLI Usage](https://turbo.build/repo/docs/reference/command-line-reference)
+Please refer to the `apps/web` app for more information about how to use

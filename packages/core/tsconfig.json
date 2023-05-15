@@ -1,5 +1,5 @@
 {
   "extends": "@social-oauth2/tsconfig/react-library.json",
   "include": ["."],
-  "exclude": ["dist", "build", "node_modules"]
+  "exclude": ["dist", "build", "node_modules"],
 }
