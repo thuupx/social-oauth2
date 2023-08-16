@@ -1,13 +1,13 @@
 import {
+  ISocialProvider,
   ProviderType,
-  SocialProvider,
   SocialProviderFactory,
 } from '@social-oauth2/core';
 
 // TODO: Handle your own custom providers
 export class TwitterProviderFactory
   extends SocialProviderFactory
-  implements SocialProvider
+  implements ISocialProvider
 {
   name: ProviderType;
   sdkSrc: string;
@@ -15,7 +15,7 @@ export class TwitterProviderFactory
   onScriptLoaded(event: Event): void {
     throw new Error('Method not implemented.');
   }
-  public factoryProvider(): SocialProvider {
+  public factoryProvider(): ISocialProvider {
     throw new Error('Method not implemented.');
   }
   public getAccessToken(): void {

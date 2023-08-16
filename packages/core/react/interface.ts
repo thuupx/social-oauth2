@@ -1,5 +1,5 @@
 import { ButtonHTMLAttributes, ScriptHTMLAttributes } from 'react';
-import { ResolvedResult } from '../OAuth2';
+import { ResolvedResult } from '../oauth2';
 
 export interface ScriptProps extends ScriptHTMLAttributes<HTMLScriptElement> {
   strategy?: 'afterInteractive' | 'lazyOnload';

@@ -1,6 +1,6 @@
-import { SocialProviderFactory } from '../SocialProviderFactory';
-import { ProviderType } from '../interfaces';
-import { GoogleProviderFactory } from './Google/GoogleProviderFactory';
+import { ProviderType } from '../enums';
+import { SocialProviderFactory } from '../social-provider.factory';
+import { GoogleProviderFactory } from './google/google-provider.factory';
 
 export class SocialProviderFactoryRegistry {
   private static instance: SocialProviderFactoryRegistry;
@@ -15,21 +15,25 @@ export class SocialProviderFactoryRegistry {
   }
 
   registerFactory(type: ProviderType, factory: SocialProviderFactory): void {
+    if (this.factories.has(type)) {
+      throw new Error(`Factory for type ${type} already registered`);
+    }
     this.factories.set(type, factory);
   }
 
-  getFactory(type: ProviderType): SocialProviderFactory {
+  getFactory<T extends SocialProviderFactory>(type: ProviderType): T {
     const factory = this.factories.get(type);
     if (!factory) {
       throw new Error(`No factory registered for type ${type}`);
     }
-    return factory;
+    return factory as T;
   }
 }
 
-export const registry = SocialProviderFactoryRegistry.getInstance();
+export const socialProviderFactoryRegistry =
+  SocialProviderFactoryRegistry.getInstance();
 
-registry.registerFactory(
+socialProviderFactoryRegistry.registerFactory(
   ProviderType.Google,
   GoogleProviderFactory.getInstance(),
 );

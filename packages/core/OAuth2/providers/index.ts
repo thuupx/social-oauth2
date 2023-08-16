@@ -1,2 +1,2 @@
-export * from './Google/GoogleProviderFactory';
+export * from './google/google-provider.factory';
 export * from './registry';

@@ -1,16 +1,17 @@
-import { loadScript } from '../helper';
 import {
-  AbstractProvider,
-  ProviderOption,
+  IAbstractProvider,
+  IProviderOption,
+  ISocialProvider,
   SDKConfig,
-  SocialProvider
 } from './interfaces';
 
-export abstract class SocialProviderFactory implements AbstractProvider {
+import { loadScript } from '../helper';
+
+export abstract class SocialProviderFactory implements IAbstractProvider {
   /**
    * Factory for creating a new social provider
    */
-  public abstract factoryProvider(): SocialProvider;
+  public abstract factoryProvider(): ISocialProvider;
 
   /**
    * Get the social provider access token
@@ -22,7 +23,7 @@ export abstract class SocialProviderFactory implements AbstractProvider {
     callback: this.onSuccess,
     error_callback: this.onError,
   };
-  option: ProviderOption = {
+  option: IProviderOption = {
     fetchProfile: false,
     onResolved: () => {},
     onRejected: () => {},
@@ -69,7 +70,7 @@ export abstract class SocialProviderFactory implements AbstractProvider {
     return {};
   }
 
-  public initialize(config: SDKConfig, option: ProviderOption) {
+  public initialize(config: SDKConfig, option: IProviderOption) {
     console.log('Initializing provider with configuration:', {
       config,
       option,
@@ -88,7 +89,7 @@ export abstract class SocialProviderFactory implements AbstractProvider {
     return this;
   }
 
-  public setProviderOption(option: ProviderOption) {
+  public setProviderOption(option: IProviderOption) {
     this.option = {
       ...this.option,
       ...option,

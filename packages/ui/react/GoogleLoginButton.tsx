@@ -1,11 +1,14 @@
 'use client';
 import {
+  GoogleProviderFactory,
   ProviderType,
   SocialLoginButtonProps,
-  registry,
+  socialProviderFactoryRegistry,
 } from '@social-oauth2/core';
 
-const factory = registry.getFactory(ProviderType.Google);
+const factory = socialProviderFactoryRegistry.getFactory<GoogleProviderFactory>(
+  ProviderType.Google,
+);
 
 export function GoogleLoginButton({
   buttonProps = {},

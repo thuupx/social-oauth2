@@ -1,13 +1,10 @@
-import { SocialProviderFactory } from '../../SocialProviderFactory';
-import {
-  ProviderType,
-  SocialClient,
-  SocialProvider
-} from '../../interfaces';
+import { SocialProviderFactory } from '../../social-provider.factory';
+import { ProviderType } from '../../enums/provider-type.enum';
+import { ISocialProvider, SocialClient } from '../../interfaces';
 
 export class GoogleProviderFactory
   extends SocialProviderFactory
-  implements SocialProvider
+  implements ISocialProvider
 {
   name = ProviderType.Google;
   sdkSrc = 'https://accounts.google.com/gsi/client';

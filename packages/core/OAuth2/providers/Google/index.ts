@@ -1,1 +1,1 @@
-export * from './GoogleProviderFactory';
+export * from './google-provider.factory';
